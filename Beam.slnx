@@ -1,0 +1,23 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Beam.Api/Beam.Api.csproj" />
+    <Project Path="src/Beam.Infrastructure/Beam.Infrastructure.csproj" />
+    <Project Path="src/Beam.Shared/Beam.Shared.csproj" />
+  </Folder>
+  <Folder Name="/src/Beam.Modules/">
+    <Project Path="src/Beam.Modules/Beam.Modules.AiGeneration/Beam.Modules.AiGeneration.csproj" />
+    <Project Path="src/Beam.Modules/Beam.Modules.Assets/Beam.Modules.Assets.csproj" />
+    <Project Path="src/Beam.Modules/Beam.Modules.Elements/Beam.Modules.Elements.csproj" />
+    <Project Path="src/Beam.Modules/Beam.Modules.Identity/Beam.Modules.Identity.csproj" />
+    <Project Path="src/Beam.Modules/Beam.Modules.LiveControl/Beam.Modules.LiveControl.csproj" />
+    <Project Path="src/Beam.Modules/Beam.Modules.Organizations/Beam.Modules.Organizations.csproj" />
+    <Project Path="src/Beam.Modules/Beam.Modules.Overlays/Beam.Modules.Overlays.csproj" />
+    <Project Path="src/Beam.Modules/Beam.Modules.Projects/Beam.Modules.Projects.csproj" />
+    <Project Path="src/Beam.Modules/Beam.Modules.Scenes/Beam.Modules.Scenes.csproj" />
+    <Project Path="src/Beam.Modules/Beam.Modules.StreamingDestinations/Beam.Modules.StreamingDestinations.csproj" />
+    <Project Path="src/Beam.Modules/Beam.Modules.Templates/Beam.Modules.Templates.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Beam.Api.Tests/Beam.Api.Tests.csproj" />
+  </Folder>
+</Solution>

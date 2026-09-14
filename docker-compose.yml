@@ -1,0 +1,75 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: beam
+      POSTGRES_USER: beam
+      POSTGRES_PASSWORD: beam_dev_password
+    ports:
+      - "5437:5432"
+    volumes:
+      - beam_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U beam -d beam"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: beam_dev_access_key
+      MINIO_ROOT_PASSWORD: beam_dev_secret_key
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - beam_minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: src/Beam.Api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__BeamDb: "Host=postgres;Port=5432;Database=beam;Username=beam;Password=beam_dev_password"
+      Storage__ServiceUrl: "http://minio:9000"
+      Storage__AccessKey: "beam_dev_access_key"
+      Storage__SecretKey: "beam_dev_secret_key"
+      Storage__BucketName: "beam-assets"
+    ports:
+      - "5080:8080"
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      BEAM_API_INTERNAL_URL: "http://api:8080"
+      # Consumed by the browser directly (overlay/control pages), so this must be the API's
+      # publicly reachable address, not the Docker-internal service name above.
+      BEAM_API_PUBLIC_URL: "http://localhost:5080"
+    ports:
+      - "3000:3000"
+
+volumes:
+  beam_postgres_data:
+  beam_minio_data:

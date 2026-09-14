@@ -1,0 +1,6 @@
+@Beam.Api_HostAddress = http://localhost:5115
+
+GET {{Beam.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

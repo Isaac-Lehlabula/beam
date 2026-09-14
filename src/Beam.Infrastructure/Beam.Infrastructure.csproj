@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Beam.Shared\Beam.Shared.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.Identity\Beam.Modules.Identity.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.Audit\Beam.Modules.Audit.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.Organizations\Beam.Modules.Organizations.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.Projects\Beam.Modules.Projects.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.Scenes\Beam.Modules.Scenes.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.Elements\Beam.Modules.Elements.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.Assets\Beam.Modules.Assets.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.Overlays\Beam.Modules.Overlays.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.Templates\Beam.Modules.Templates.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.LiveControl\Beam.Modules.LiveControl.csproj" />
+    <ProjectReference Include="..\Beam.Modules\Beam.Modules.StreamingDestinations\Beam.Modules.StreamingDestinations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
