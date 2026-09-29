@@ -19,7 +19,8 @@ import type {
   VideoElementConfig,
 } from "@/lib/types";
 
-const disabledClass = "disabled:bg-neutral-100 disabled:text-neutral-400";
+const disabledClass = "disabled:bg-neutral-100 disabled:text-neutral-400 dark:disabled:bg-neutral-900 dark:disabled:text-neutral-600";
+const fieldClass = "dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100";
 
 function isEditable(editableProperties: string[] | null, key: string) {
   return editableProperties === null || editableProperties.includes(key);
@@ -28,8 +29,8 @@ function isEditable(editableProperties: string[] | null, key: string) {
 function TextRow({ label, value, disabled, onChange }: { label: string; value: string; disabled: boolean; onChange: (v: string) => void }) {
   return (
     <label className="block text-xs">
-      <span className="text-neutral-500">{label}</span>
-      <input value={value} disabled={disabled} onChange={(e) => onChange(e.target.value)} className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${disabledClass}`} />
+      <span className="text-neutral-500 dark:text-neutral-400">{label}</span>
+      <input value={value} disabled={disabled} onChange={(e) => onChange(e.target.value)} className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${fieldClass} ${disabledClass}`} />
     </label>
   );
 }
@@ -37,8 +38,8 @@ function TextRow({ label, value, disabled, onChange }: { label: string; value: s
 function NumberRow({ label, value, disabled, onChange }: { label: string; value: number; disabled: boolean; onChange: (v: number) => void }) {
   return (
     <label className="block text-xs">
-      <span className="text-neutral-500">{label}</span>
-      <input type="number" value={value} disabled={disabled} onChange={(e) => onChange(Number(e.target.value))} className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${disabledClass}`} />
+      <span className="text-neutral-500 dark:text-neutral-400">{label}</span>
+      <input type="number" value={value} disabled={disabled} onChange={(e) => onChange(Number(e.target.value))} className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${fieldClass} ${disabledClass}`} />
     </label>
   );
 }
@@ -46,8 +47,8 @@ function NumberRow({ label, value, disabled, onChange }: { label: string; value:
 function ColorRow({ label, value, disabled, onChange }: { label: string; value: string; disabled: boolean; onChange: (v: string) => void }) {
   return (
     <label className="block text-xs">
-      <span className="text-neutral-500">{label}</span>
-      <input type="color" value={value.startsWith("#") ? value : "#000000"} disabled={disabled} onChange={(e) => onChange(e.target.value)} className={`mt-0.5 h-8 w-full rounded border border-neutral-300 ${disabledClass}`} />
+      <span className="text-neutral-500 dark:text-neutral-400">{label}</span>
+      <input type="color" value={value.startsWith("#") ? value : "#000000"} disabled={disabled} onChange={(e) => onChange(e.target.value)} className={`mt-0.5 h-8 w-full rounded border border-neutral-300 ${fieldClass} ${disabledClass}`} />
     </label>
   );
 }
@@ -88,10 +89,10 @@ export function StatCounterFields({ elementId, config, applyConfig, editableProp
 
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Stat Counter</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Stat Counter</h2>
       <label className="block text-xs">
-        <span className="text-neutral-500">Kind</span>
-        <select value={config.kind} disabled={!editable("kind")} onChange={(e) => set({ kind: e.target.value as StatCounterElementConfig["kind"] })} className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${disabledClass}`}>
+        <span className="text-neutral-500 dark:text-neutral-400">Kind</span>
+        <select value={config.kind} disabled={!editable("kind")} onChange={(e) => set({ kind: e.target.value as StatCounterElementConfig["kind"] })} className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${fieldClass} ${disabledClass}`}>
           <option value="viewers">Viewers</option>
           <option value="subscribers">Subscribers</option>
           <option value="followers">Followers</option>
@@ -107,15 +108,15 @@ export function StatCounterFields({ elementId, config, applyConfig, editableProp
               key={c.id}
               onClick={() => handleSync(c)}
               disabled={syncing || !editable("manualValue")}
-              className="w-full rounded border border-neutral-300 px-2 py-1 text-xs hover:bg-neutral-50 disabled:opacity-50"
+              className="w-full rounded border border-neutral-300 px-2 py-1 text-xs hover:bg-neutral-50 disabled:opacity-50 dark:border-neutral-700 dark:hover:bg-neutral-900"
             >
               {syncing ? "Syncing..." : `Sync from ${c.provider} (${c.externalAccountName})`}
             </button>
           ))}
-          {syncError && <p className="text-xs text-red-600">{syncError}</p>}
+          {syncError && <p className="text-xs text-red-600 dark:text-red-400">{syncError}</p>}
         </div>
       ) : (
-        <p className="text-xs text-neutral-400">
+        <p className="text-xs text-neutral-400 dark:text-neutral-500">
           Connect a channel under Streaming destinations to sync this value from live data.
         </p>
       )}
@@ -128,7 +129,7 @@ export function QrCodeFields({ elementId, config, applyConfig, editablePropertie
   const editable = (k: string) => isEditable(editableProperties, k);
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">QR Code</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">QR Code</h2>
       <TextRow label="Value / URL" value={config.value} disabled={!editable("value")} onChange={(v) => set({ value: v })} />
       <ColorRow label="Foreground" value={config.foregroundColor} disabled={!editable("foregroundColor")} onChange={(v) => set({ foregroundColor: v })} />
       <ColorRow label="Background" value={config.backgroundColor} disabled={!editable("backgroundColor")} onChange={(v) => set({ backgroundColor: v })} />
@@ -141,15 +142,15 @@ export function CountdownFields({ elementId, config, applyConfig, editableProper
   const editable = (k: string) => isEditable(editableProperties, k);
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Countdown</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Countdown</h2>
       <label className="block text-xs">
-        <span className="text-neutral-500">Ends at</span>
+        <span className="text-neutral-500 dark:text-neutral-400">Ends at</span>
         <input
           type="datetime-local"
           value={new Date(config.endsAtUtc).toISOString().slice(0, 16)}
           disabled={!editable("endsAtUtc")}
           onChange={(e) => set({ endsAtUtc: new Date(e.target.value).toISOString() })}
-          className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${disabledClass}`}
+          className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${fieldClass} ${disabledClass}`}
         />
       </label>
       <TextRow label="Label" value={config.label} disabled={!editable("label")} onChange={(v) => set({ label: v })} />
@@ -164,7 +165,7 @@ export function ProgressBarFields({ elementId, config, applyConfig, editableProp
   const editable = (k: string) => isEditable(editableProperties, k);
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Progress Bar</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Progress Bar</h2>
       <TextRow label="Label" value={config.label} disabled={!editable("label")} onChange={(v) => set({ label: v })} />
       <NumberRow label="Current" value={config.currentValue} disabled={!editable("currentValue")} onChange={(v) => set({ currentValue: v })} />
       <NumberRow label="Target" value={config.targetValue} disabled={!editable("targetValue")} onChange={(v) => set({ targetValue: v })} />
@@ -179,15 +180,15 @@ export function TickerFields({ elementId, config, applyConfig, editablePropertie
   const editable = (k: string) => isEditable(editableProperties, k);
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Ticker</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Ticker</h2>
       <label className="block text-xs">
-        <span className="text-neutral-500">Items (one per line)</span>
+        <span className="text-neutral-500 dark:text-neutral-400">Items (one per line)</span>
         <textarea
           value={config.items.join("\n")}
           disabled={!editable("items")}
           onChange={(e) => set({ items: e.target.value.split("\n").filter(Boolean) })}
           rows={4}
-          className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 text-sm ${disabledClass}`}
+          className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 text-sm ${fieldClass} ${disabledClass}`}
         />
       </label>
       <NumberRow label="Speed (px/s)" value={config.speedPxPerSecond} disabled={!editable("speedPxPerSecond")} onChange={(v) => set({ speedPxPerSecond: v })} />
@@ -202,7 +203,7 @@ export function LowerThirdFields({ elementId, config, applyConfig, editablePrope
   const editable = (k: string) => isEditable(editableProperties, k);
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Lower Third</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Lower Third</h2>
       <TextRow label="Primary text (name)" value={config.primaryText} disabled={!editable("primaryText")} onChange={(v) => set({ primaryText: v })} />
       <TextRow label="Secondary text (title)" value={config.secondaryText} disabled={!editable("secondaryText")} onChange={(v) => set({ secondaryText: v })} />
       <ColorRow label="Accent" value={config.accentColor} disabled={!editable("accentColor")} onChange={(v) => set({ accentColor: v })} />
@@ -214,8 +215,8 @@ export function LowerThirdFields({ elementId, config, applyConfig, editablePrope
 export function ImageCarouselFields({ config }: Fields<ImageCarouselElementConfig>) {
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Image Carousel</h2>
-      <p className="text-xs text-neutral-500">{config.assetIds.length} image(s), rotating every {config.intervalSeconds}s. Use &quot;+ Carousel&quot; to replace the set.</p>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Image Carousel</h2>
+      <p className="text-xs text-neutral-500 dark:text-neutral-400">{config.assetIds.length} image(s), rotating every {config.intervalSeconds}s. Use &quot;+ Carousel&quot; to replace the set.</p>
     </div>
   );
 }
@@ -225,7 +226,7 @@ export function PollFields({ elementId, config, applyConfig, editableProperties 
   const editable = (k: string) => isEditable(editableProperties, k);
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Poll</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Poll</h2>
       <TextRow label="Question" value={config.question} disabled={!editable("question")} onChange={(v) => set({ question: v })} />
       {config.options.map((opt, i) => (
         <div key={i} className="flex gap-1">
@@ -233,19 +234,22 @@ export function PollFields({ elementId, config, applyConfig, editableProperties 
             value={opt.label}
             disabled={!editable("options")}
             onChange={(e) => set({ options: config.options.map((o, j) => (j === i ? { ...o, label: e.target.value } : o)) })}
-            className={`w-2/3 rounded border border-neutral-300 px-2 py-1 text-xs ${disabledClass}`}
+            className={`w-2/3 rounded border border-neutral-300 px-2 py-1 text-xs ${fieldClass} ${disabledClass}`}
           />
           <input
             type="number"
             value={opt.votes}
             disabled={!editable("options")}
             onChange={(e) => set({ options: config.options.map((o, j) => (j === i ? { ...o, votes: Number(e.target.value) } : o)) })}
-            className={`w-1/3 rounded border border-neutral-300 px-2 py-1 text-xs ${disabledClass}`}
+            className={`w-1/3 rounded border border-neutral-300 px-2 py-1 text-xs ${fieldClass} ${disabledClass}`}
           />
         </div>
       ))}
       {editable("options") && (
-        <button onClick={() => set({ options: [...config.options, { label: "New option", votes: 0 }] })} className="text-xs text-blue-600 hover:underline">
+        <button
+          onClick={() => set({ options: [...config.options, { label: "New option", votes: 0 }] })}
+          className="text-primary-ink dark:text-primary text-xs hover:underline"
+        >
           + Add option
         </button>
       )}
@@ -259,7 +263,7 @@ export function ScoreboardFields({ elementId, config, applyConfig, editablePrope
   const editable = (k: string) => isEditable(editableProperties, k);
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Scoreboard</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Scoreboard</h2>
       <TextRow label="Team A name" value={config.teamA.name} disabled={!editable("teamA")} onChange={(v) => set({ teamA: { ...config.teamA, name: v } })} />
       <NumberRow label="Team A score" value={config.teamA.score} disabled={!editable("teamA")} onChange={(v) => set({ teamA: { ...config.teamA, score: v } })} />
       <ColorRow label="Team A color" value={config.teamA.color} disabled={!editable("teamA")} onChange={(v) => set({ teamA: { ...config.teamA, color: v } })} />
@@ -275,7 +279,7 @@ export function NowPlayingFields({ elementId, config, applyConfig, editablePrope
   const editable = (k: string) => isEditable(editableProperties, k);
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Now Playing</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Now Playing</h2>
       <TextRow label="Track" value={config.track} disabled={!editable("track")} onChange={(v) => set({ track: v })} />
       <TextRow label="Artist" value={config.artist} disabled={!editable("artist")} onChange={(v) => set({ artist: v })} />
       <ColorRow label="Text color" value={config.textColor} disabled={!editable("textColor")} onChange={(v) => set({ textColor: v })} />
@@ -287,7 +291,7 @@ export function BrowserEmbedFields({ elementId, config, applyConfig, editablePro
   const editable = isEditable(editableProperties, "url");
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Browser Embed</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Browser Embed</h2>
       <TextRow label="URL (https only)" value={config.url} disabled={!editable} onChange={(v) => applyConfig(elementId, config, { ...config, url: v })} />
     </div>
   );
@@ -298,17 +302,17 @@ export function AlertFields({ elementId, config, applyConfig, editableProperties
   const editable = (k: string) => isEditable(editableProperties, k);
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Alert</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Alert</h2>
       <TextRow label="Message" value={config.message} disabled={!editable("message")} onChange={(v) => set({ message: v })} />
       <ColorRow label="Accent" value={config.accentColor} disabled={!editable("accentColor")} onChange={(v) => set({ accentColor: v })} />
       <label className="block text-xs">
-        <span className="text-neutral-500">Animation</span>
-        <select value={config.animationStyle} disabled={!editable("animationStyle")} onChange={(e) => set({ animationStyle: e.target.value as AlertElementConfig["animationStyle"] })} className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${disabledClass}`}>
+        <span className="text-neutral-500 dark:text-neutral-400">Animation</span>
+        <select value={config.animationStyle} disabled={!editable("animationStyle")} onChange={(e) => set({ animationStyle: e.target.value as AlertElementConfig["animationStyle"] })} className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${fieldClass} ${disabledClass}`}>
           <option value="fade">Fade</option>
           <option value="slide">Slide</option>
         </select>
       </label>
-      <p className="text-xs text-neutral-400">Show/hide this from Live Control to trigger it during a broadcast.</p>
+      <p className="text-xs text-neutral-400 dark:text-neutral-500">Show/hide this from Live Control to trigger it during a broadcast.</p>
     </div>
   );
 }
@@ -318,10 +322,10 @@ export function CameraFields({ elementId, config, applyConfig, editablePropertie
   const editable = (k: string) => isEditable(editableProperties, k);
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Camera Placeholder</h2>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Camera Placeholder</h2>
       <TextRow label="Label" value={config.label} disabled={!editable("label")} onChange={(v) => set({ label: v })} />
       <ColorRow label="Border color" value={config.borderColor} disabled={!editable("borderColor")} onChange={(v) => set({ borderColor: v })} />
-      <p className="text-xs text-neutral-400">Design-time only -- invisible in the live overlay. Point an OBS camera source at this area.</p>
+      <p className="text-xs text-neutral-400 dark:text-neutral-500">Design-time only -- invisible in the live overlay. Point a camera source (OBS, Streamlabs, etc.) at this area.</p>
     </div>
   );
 }
@@ -329,8 +333,8 @@ export function CameraFields({ elementId, config, applyConfig, editablePropertie
 export function VideoFields({ config }: Fields<VideoElementConfig>) {
   return (
     <div className="space-y-2">
-      <h2 className="text-xs font-semibold uppercase text-neutral-500">Video</h2>
-      <p className="text-xs text-neutral-500">Loop: {config.loop ? "on" : "off"} · Muted: {config.muted ? "on" : "off"} · Fit: {config.fit}</p>
+      <h2 className="text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Video</h2>
+      <p className="text-xs text-neutral-500 dark:text-neutral-400">Loop: {config.loop ? "on" : "off"} · Muted: {config.muted ? "on" : "off"} · Fit: {config.fit}</p>
     </div>
   );
 }

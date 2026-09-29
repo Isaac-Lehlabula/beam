@@ -69,24 +69,30 @@ export function SaveAsOrgTemplate({ projectId }: { projectId: string }) {
 
   return (
     <>
-      <button onClick={handleOpen} className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50">
+      <button
+        onClick={handleOpen}
+        className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-900"
+      >
         Save as org template
       </button>
 
       {open && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/30 px-6" onClick={() => setOpen(false)}>
-          <div className="max-h-[85vh] w-full max-w-lg space-y-3 overflow-y-auto rounded-lg bg-white p-6 shadow-lg" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="animate-pop-in max-h-[85vh] w-full max-w-lg space-y-3 overflow-y-auto rounded-xl bg-white p-6 shadow-xl dark:bg-neutral-900 dark:shadow-black/50"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h2 className="text-lg font-semibold">Save as organization template</h2>
 
             {orgs.length === 0 ? (
-              <p className="text-sm text-neutral-500">
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">
                 You need Owner, Admin, or Designer in an organization to author templates.
               </p>
             ) : done ? (
-              <p className="text-sm text-green-700">Template saved. Members of the organization can now use it.</p>
+              <p className="text-sm text-green-700 dark:text-green-400">Template saved. Members of the organization can now use it.</p>
             ) : (
               <>
-                <p className="text-xs text-neutral-500">
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">
                   Snapshots every scene in this project. Pick elements from one scene below to lock in the
                   template -- locked elements can never be moved, resized, or deleted once instantiated, and only
                   the config properties you list stay editable (e.g. <code>content</code>).
@@ -94,8 +100,12 @@ export function SaveAsOrgTemplate({ projectId }: { projectId: string }) {
 
                 <div className="grid grid-cols-2 gap-2">
                   <label className="text-xs">
-                    <span className="block text-neutral-500">Organization</span>
-                    <select value={organizationId} onChange={(e) => setOrganizationId(e.target.value)} className="w-full rounded border border-neutral-300 px-2 py-1.5 text-sm">
+                    <span className="block text-neutral-500 dark:text-neutral-400">Organization</span>
+                    <select
+                      value={organizationId}
+                      onChange={(e) => setOrganizationId(e.target.value)}
+                      className="w-full rounded border border-neutral-300 px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+                    >
                       <option value="">Choose...</option>
                       {orgs.map((o) => (
                         <option key={o.id} value={o.id}>
@@ -105,8 +115,12 @@ export function SaveAsOrgTemplate({ projectId }: { projectId: string }) {
                     </select>
                   </label>
                   <label className="text-xs">
-                    <span className="block text-neutral-500">Category</span>
-                    <select value={category} onChange={(e) => setCategory(e.target.value as (typeof CATEGORIES)[number])} className="w-full rounded border border-neutral-300 px-2 py-1.5 text-sm">
+                    <span className="block text-neutral-500 dark:text-neutral-400">Category</span>
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value as (typeof CATEGORIES)[number])}
+                      className="w-full rounded border border-neutral-300 px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+                    >
                       {CATEGORIES.map((c) => (
                         <option key={c} value={c}>
                           {c}
@@ -117,13 +131,21 @@ export function SaveAsOrgTemplate({ projectId }: { projectId: string }) {
                 </div>
 
                 <label className="block text-xs">
-                  <span className="text-neutral-500">Template name</span>
-                  <input value={name} onChange={(e) => setName(e.target.value)} className="w-full rounded border border-neutral-300 px-2 py-1.5 text-sm" />
+                  <span className="text-neutral-500 dark:text-neutral-400">Template name</span>
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full rounded border border-neutral-300 px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+                  />
                 </label>
 
                 <label className="block text-xs">
-                  <span className="text-neutral-500">Preview/lock elements from scene</span>
-                  <select value={sceneId} onChange={(e) => setSceneId(e.target.value)} className="w-full rounded border border-neutral-300 px-2 py-1.5 text-sm">
+                  <span className="text-neutral-500 dark:text-neutral-400">Preview/lock elements from scene</span>
+                  <select
+                    value={sceneId}
+                    onChange={(e) => setSceneId(e.target.value)}
+                    className="w-full rounded border border-neutral-300 px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+                  >
                     {scenes.map((s) => (
                       <option key={s.id} value={s.id}>
                         {s.name}
@@ -134,7 +156,7 @@ export function SaveAsOrgTemplate({ projectId }: { projectId: string }) {
 
                 <ul className="space-y-1">
                   {elements.map((el) => (
-                    <li key={el.id} className="rounded border border-neutral-200 p-2">
+                    <li key={el.id} className="rounded border border-neutral-200 p-2 dark:border-neutral-800">
                       <label className="flex items-center gap-2 text-sm">
                         <input
                           type="checkbox"
@@ -152,7 +174,7 @@ export function SaveAsOrgTemplate({ projectId }: { projectId: string }) {
                           onChange={(e) =>
                             setChoices((c) => ({ ...c, [el.id]: { ...c[el.id], editableProperties: e.target.value } }))
                           }
-                          className="mt-1 w-full rounded border border-neutral-300 px-2 py-1 text-xs"
+                          className="mt-1 w-full rounded border border-neutral-300 px-2 py-1 text-xs dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
                         />
                       )}
                     </li>
@@ -160,13 +182,16 @@ export function SaveAsOrgTemplate({ projectId }: { projectId: string }) {
                 </ul>
 
                 <div className="flex justify-end gap-2 pt-2">
-                  <button onClick={() => setOpen(false)} className="rounded-md px-3 py-1.5 text-sm hover:bg-neutral-100">
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="rounded-md px-3 py-1.5 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  >
                     Cancel
                   </button>
                   <button
                     onClick={handleSave}
                     disabled={saving || !organizationId || !name.trim()}
-                    className="rounded-md bg-black px-3 py-1.5 text-sm text-white hover:bg-neutral-800 disabled:opacity-50"
+                    className="bg-primary shadow-primary/20 rounded-md px-3 py-1.5 text-sm text-white shadow-sm transition hover:brightness-110 active:scale-95 disabled:opacity-50"
                   >
                     {saving ? "Saving..." : "Save template"}
                   </button>

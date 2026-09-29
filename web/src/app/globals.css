@@ -1,26 +1,161 @@
 @import "tailwindcss";
 
+/* Switches Tailwind's `dark:` variant from prefers-color-scheme to "does an ancestor carry
+   the .dark class" -- ThemeProvider toggles that class on <html>, so light/dark is a user
+   choice (persisted to localStorage), not just an OS setting. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* ---- Brand: solid colors only, no gradients ----
+     Primary is the exact brand teal. primary-ink is a darkened variant used only where the
+     color itself is the text color (links, colored headings) on a *light* background -- the
+     base primary's contrast against white is too low for body-sized text; on dark backgrounds
+     the base primary already reads fine, so dark:text-primary is used there instead. */
+  --color-primary: #32a8a2;
+  --color-primary-ink: #1f8880;
+  --color-secondary: #f2704b;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--color-primary);
+  --color-primary-ink: var(--color-primary-ink);
+  --color-secondary: var(--color-secondary);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-space-grotesk);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(4%, -6%) scale(1.08); }
+  66% { transform: translate(-3%, 4%) scale(0.95); }
+}
+.animate-blob {
+  animation: blob-float 14s ease-in-out infinite;
+}
+.animate-blob-delay {
+  animation: blob-float 14s ease-in-out infinite;
+  animation-delay: -5s;
+}
+.animate-blob-delay-2 {
+  animation: blob-float 16s ease-in-out infinite;
+  animation-delay: -10s;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.94) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.animate-pop-in {
+  animation: pop-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Scroll-triggered reveal (see useInView): starts hidden/settled, ScrollReveal flips this class
+   on once the element enters the viewport, playing a cartoonish springy overshoot-in. */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px) scale(0.96);
+}
+.scroll-reveal.is-visible {
+  animation: pop-in-bouncy 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes pop-in-bouncy {
+  0% { opacity: 0; transform: translateY(28px) scale(0.9); }
+  60% { opacity: 1; transform: translateY(-4px) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+.hover\:animate-wiggle:hover {
+  animation: wiggle 0.3s ease-in-out infinite;
+}
+
+/* Cartoonish idle motion: streamer-y emoji drifting/bobbing/spinning in the hero, and feature
+   card icons giving a little idle bounce even without a hover. */
+@keyframes float-particle {
+  0%, 100% { transform: translateY(0) rotate(var(--float-rot-a, -8deg)); }
+  50% { transform: translateY(-22px) rotate(var(--float-rot-b, 8deg)); }
+}
+.animate-float {
+  animation: float-particle 4.5s ease-in-out infinite;
+}
+
+@keyframes icon-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(-3deg); }
+}
+.animate-icon-bob {
+  animation: icon-bob 2.4s ease-in-out infinite;
+}
+
+@keyframes bounce-badge {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-5px) rotate(1deg); }
+}
+.animate-bounce-badge {
+  animation: bounce-badge 2.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+/* A diagonal light sweep across gradient CTA buttons on hover -- classic cartoon "shiny button". */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  left: -75%;
+  width: 50%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.55s ease;
+}
+.btn-shine:hover::after {
+  left: 125%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob, .animate-blob-delay, .animate-blob-delay-2,
+  .animate-fade-in-up, .animate-pop-in,
+  .hover\:animate-wiggle:hover, .animate-float, .animate-icon-bob, .animate-bounce-badge {
+    animation: none;
+  }
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .scroll-reveal.is-visible {
+    animation: none;
+  }
+  .btn-shine::after {
+    display: none;
+  }
 }

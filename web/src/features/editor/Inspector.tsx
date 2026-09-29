@@ -41,7 +41,7 @@ export function Inspector() {
 
   if (!element) {
     return (
-      <div className="w-64 shrink-0 border-l border-neutral-200 p-3 text-xs text-neutral-400">
+      <div className="w-64 shrink-0 border-l border-neutral-200 p-3 text-xs text-neutral-400 dark:border-neutral-800 dark:text-neutral-500">
         Select an element to edit its properties.
       </div>
     );
@@ -54,7 +54,7 @@ export function Inspector() {
   function numberField(label: string, key: "x" | "y" | "width" | "height" | "rotation" | "opacity", step = 1) {
     return (
       <label className="block text-xs">
-        <span className="text-neutral-500">{label}</span>
+        <span className="text-neutral-500 dark:text-neutral-400">{label}</span>
         <input
           type="number"
           step={step}
@@ -65,23 +65,23 @@ export function Inspector() {
             if (Number.isNaN(value)) return;
             applyTransform(element!.id, transform, { ...transform, [key]: value });
           }}
-          className="mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 disabled:bg-neutral-100 disabled:text-neutral-400"
+          className="mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 disabled:bg-neutral-100 disabled:text-neutral-400 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:disabled:bg-neutral-900 dark:disabled:text-neutral-600"
         />
       </label>
     );
   }
 
   return (
-    <div className="w-64 shrink-0 space-y-4 overflow-y-auto border-l border-neutral-200 p-3">
+    <div className="w-64 shrink-0 space-y-4 overflow-y-auto border-l border-neutral-200 p-3 dark:border-neutral-800">
       {editableProperties !== null && (
-        <div className="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-800">
+        <div className="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950/50 dark:text-amber-400">
           🔒 Locked by template. Position, size and deletion can&apos;t be changed
           {editableProperties.length > 0 ? `; only ${editableProperties.join(", ")} can be edited.` : "."}
         </div>
       )}
 
       <div>
-        <h2 className="mb-2 text-xs font-semibold uppercase text-neutral-500">Transform</h2>
+        <h2 className="mb-2 text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Transform</h2>
         <div className="grid grid-cols-2 gap-2">
           {numberField("X", "x")}
           {numberField("Y", "y")}
@@ -144,39 +144,40 @@ function TextConfigFields({
 }) {
   const update = (patch: Partial<TextElementConfig>) => applyConfig(elementId, config, { ...config, ...patch });
   const editable = (key: string) => isFieldEditable(editableProperties, key);
-  const disabledClass = "disabled:bg-neutral-100 disabled:text-neutral-400";
+  const disabledClass = "disabled:bg-neutral-100 disabled:text-neutral-400 dark:disabled:bg-neutral-900 dark:disabled:text-neutral-600";
+  const fieldClass = "dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100";
 
   return (
     <div>
-      <h2 className="mb-2 text-xs font-semibold uppercase text-neutral-500">Text</h2>
+      <h2 className="mb-2 text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Text</h2>
       <div className="space-y-2">
         <label className="block text-xs">
-          <span className="text-neutral-500">Content</span>
+          <span className="text-neutral-500 dark:text-neutral-400">Content</span>
           <textarea
             value={config.content}
             disabled={!editable("content")}
             onChange={(e) => update({ content: e.target.value })}
             rows={3}
-            className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 text-sm ${disabledClass}`}
+            className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 text-sm ${fieldClass} ${disabledClass}`}
           />
         </label>
         <label className="block text-xs">
-          <span className="text-neutral-500">Font size</span>
+          <span className="text-neutral-500 dark:text-neutral-400">Font size</span>
           <input
             type="number"
             value={config.fontSize}
             disabled={!editable("fontSize")}
             onChange={(e) => update({ fontSize: Number(e.target.value) })}
-            className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${disabledClass}`}
+            className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${fieldClass} ${disabledClass}`}
           />
         </label>
         <label className="block text-xs">
-          <span className="text-neutral-500">Weight</span>
+          <span className="text-neutral-500 dark:text-neutral-400">Weight</span>
           <select
             value={config.fontWeight}
             disabled={!editable("fontWeight")}
             onChange={(e) => update({ fontWeight: e.target.value })}
-            className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${disabledClass}`}
+            className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${fieldClass} ${disabledClass}`}
           >
             <option value="400">Normal</option>
             <option value="600">Semibold</option>
@@ -185,12 +186,12 @@ function TextConfigFields({
           </select>
         </label>
         <label className="block text-xs">
-          <span className="text-neutral-500">Align</span>
+          <span className="text-neutral-500 dark:text-neutral-400">Align</span>
           <select
             value={config.textAlign}
             disabled={!editable("textAlign")}
             onChange={(e) => update({ textAlign: e.target.value as TextElementConfig["textAlign"] })}
-            className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${disabledClass}`}
+            className={`mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 ${fieldClass} ${disabledClass}`}
           >
             <option value="left">Left</option>
             <option value="center">Center</option>
@@ -198,13 +199,13 @@ function TextConfigFields({
           </select>
         </label>
         <label className="block text-xs">
-          <span className="text-neutral-500">Color</span>
+          <span className="text-neutral-500 dark:text-neutral-400">Color</span>
           <input
             type="color"
             value={config.color}
             disabled={!editable("color")}
             onChange={(e) => update({ color: e.target.value })}
-            className={`mt-0.5 h-8 w-full rounded border border-neutral-300 ${disabledClass}`}
+            className={`mt-0.5 h-8 w-full rounded border border-neutral-300 dark:border-neutral-700 ${disabledClass}`}
           />
         </label>
       </div>
@@ -225,14 +226,14 @@ function ImageConfigFields({
 }) {
   return (
     <div>
-      <h2 className="mb-2 text-xs font-semibold uppercase text-neutral-500">Image</h2>
+      <h2 className="mb-2 text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">Image</h2>
       <label className="block text-xs">
-        <span className="text-neutral-500">Fit</span>
+        <span className="text-neutral-500 dark:text-neutral-400">Fit</span>
         <select
           value={config.fit}
           disabled={!isFieldEditable(editableProperties, "fit")}
           onChange={(e) => applyConfig(elementId, config, { ...config, fit: e.target.value as ImageElementConfig["fit"] })}
-          className="mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 disabled:bg-neutral-100 disabled:text-neutral-400"
+          className="mt-0.5 w-full rounded border border-neutral-300 px-2 py-1 disabled:bg-neutral-100 disabled:text-neutral-400 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:disabled:bg-neutral-900 dark:disabled:text-neutral-600"
         >
           <option value="cover">Cover</option>
           <option value="contain">Contain</option>

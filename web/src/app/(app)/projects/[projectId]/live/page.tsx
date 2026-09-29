@@ -54,20 +54,20 @@ export default function LiveControlPage() {
   }
 
   if (!project || !session) {
-    return <div className="p-10 text-sm text-neutral-400">Loading...</div>;
+    return <div className="p-10 text-sm text-neutral-400 dark:text-neutral-500">Loading...</div>;
   }
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
-      <Link href={`/projects/${projectId}`} className="text-sm text-neutral-500 hover:underline">
+      <Link href={`/projects/${projectId}`} className="text-sm text-neutral-500 hover:underline dark:text-neutral-400">
         &larr; {project.name}
       </Link>
 
       <div className="mt-2 mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Live Control</h1>
+        <h1 className="font-display text-2xl font-bold">Live Control</h1>
         <div className="flex items-center gap-2">
-          <span className={`h-2.5 w-2.5 rounded-full ${session.isActive ? "bg-red-500" : "bg-neutral-300"}`} />
-          <span className="text-sm text-neutral-600">{session.isActive ? "Live" : "Not live"}</span>
+          <span className={`h-2.5 w-2.5 rounded-full ${session.isActive ? "bg-red-500" : "bg-neutral-300 dark:bg-neutral-700"}`} />
+          <span className="text-sm text-neutral-600 dark:text-neutral-300">{session.isActive ? "Live" : "Not live"}</span>
         </div>
       </div>
 
@@ -84,7 +84,7 @@ export default function LiveControlPage() {
           <button
             disabled={busy}
             onClick={() => run(() => api.post(`/projects/${projectId}/live-session`))}
-            className="rounded-md bg-black px-4 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+            className="bg-primary shadow-primary/20 rounded-md px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:brightness-110 active:scale-95 disabled:opacity-50"
           >
             Start session
           </button>
@@ -96,7 +96,7 @@ export default function LiveControlPage() {
         <ConnectObsPanel projectId={projectId} resolutionWidth={project.resolutionWidth} resolutionHeight={project.resolutionHeight} />
       </div>
 
-      <h2 className="mb-2 text-sm font-medium text-neutral-500">Scenes</h2>
+      <h2 className="mb-2 text-sm font-medium text-neutral-500 dark:text-neutral-400">Scenes</h2>
       <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
         {scenes.map((scene) => (
           <button
@@ -105,10 +105,10 @@ export default function LiveControlPage() {
             onClick={() =>
               run(() => api.post(`/projects/${projectId}/live-session/switch-scene`, { sceneId: scene.id }))
             }
-            className={`rounded-lg border px-4 py-3 text-sm font-medium ${
+            className={`rounded-lg border px-4 py-3 text-sm font-medium transition-all ${
               session.currentSceneId === scene.id
-                ? "border-black bg-black text-white"
-                : "border-neutral-200 hover:border-neutral-400"
+                ? "bg-primary shadow-primary/20 border-transparent text-white shadow-sm"
+                : "hover:border-primary border-neutral-200 dark:border-neutral-800"
             }`}
           >
             {scene.name}
@@ -118,7 +118,7 @@ export default function LiveControlPage() {
 
       {session.currentSceneId && (
         <>
-          <h2 className="mb-2 text-sm font-medium text-neutral-500">Elements on air</h2>
+          <h2 className="mb-2 text-sm font-medium text-neutral-500 dark:text-neutral-400">Elements on air</h2>
           <ul className="space-y-2">
             {elements.map((element) => {
               const overridden = session.elementVisibilityOverrides[element.id];
@@ -126,7 +126,7 @@ export default function LiveControlPage() {
               return (
                 <li
                   key={element.id}
-                  className="flex items-center justify-between rounded-md border border-neutral-200 px-4 py-3"
+                  className="flex items-center justify-between rounded-md border border-neutral-200 px-4 py-3 dark:border-neutral-800"
                 >
                   <span className="text-sm">{element.name}</span>
                   <div className="flex gap-2">
@@ -134,16 +134,18 @@ export default function LiveControlPage() {
                       <button
                         disabled={busy}
                         onClick={() => handleTriggerAlert(element.id)}
-                        className="rounded-md bg-purple-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-purple-700 disabled:opacity-50"
+                        className="bg-secondary shadow-secondary/30 animate-pulse rounded-md px-3 py-1.5 text-xs font-medium text-white shadow-sm transition hover:brightness-110 active:scale-95 disabled:animate-none disabled:opacity-50"
                       >
-                        Trigger
+                        ⚡ Trigger
                       </button>
                     )}
                     <button
                       disabled={busy}
                       onClick={() => run(() => setVisibility(element.id, !visible))}
-                      className={`rounded-md px-3 py-1.5 text-xs font-medium ${
-                        visible ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-500"
+                      className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                        visible
+                          ? "bg-primary shadow-primary/20 text-white shadow-sm"
+                          : "bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400"
                       }`}
                     >
                       {visible ? "Showing" : "Hidden"}
@@ -152,7 +154,7 @@ export default function LiveControlPage() {
                 </li>
               );
             })}
-            {elements.length === 0 && <li className="text-xs text-neutral-400">No elements on this scene.</li>}
+            {elements.length === 0 && <li className="text-xs text-neutral-400 dark:text-neutral-500">No elements on this scene.</li>}
           </ul>
         </>
       )}

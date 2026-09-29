@@ -54,39 +54,39 @@ export function Toolbar() {
   }
 
   return (
-    <div className="relative flex items-center gap-2 border-b border-neutral-200 px-4 py-2">
-      <button onClick={() => handleAddDefault("Text")} className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50">
+    <div className="relative flex items-center gap-2 border-b border-neutral-200 px-4 py-2 dark:border-neutral-800">
+      <button onClick={() => handleAddDefault("Text")} className="hover:border-primary hover:bg-primary/10 hover:text-primary-ink dark:hover:text-primary rounded-md border border-neutral-300 px-3 py-1.5 text-sm transition-colors dark:border-neutral-700">
         + Text
       </button>
 
-      <button onClick={() => imageInputRef.current?.click()} className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50">
+      <button onClick={() => imageInputRef.current?.click()} className="hover:border-primary hover:bg-primary/10 hover:text-primary-ink dark:hover:text-primary rounded-md border border-neutral-300 px-3 py-1.5 text-sm transition-colors dark:border-neutral-700">
         + Image
       </button>
       <input ref={imageInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={handleImageSelected} />
 
-      <button onClick={() => videoInputRef.current?.click()} className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50">
+      <button onClick={() => videoInputRef.current?.click()} className="hover:border-primary hover:bg-primary/10 hover:text-primary-ink dark:hover:text-primary rounded-md border border-neutral-300 px-3 py-1.5 text-sm transition-colors dark:border-neutral-700">
         + Video
       </button>
       <input ref={videoInputRef} type="file" accept="video/mp4,video/webm" className="hidden" onChange={handleVideoSelected} />
 
-      <button onClick={() => carouselInputRef.current?.click()} className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50">
+      <button onClick={() => carouselInputRef.current?.click()} className="hover:border-primary hover:bg-primary/10 hover:text-primary-ink dark:hover:text-primary rounded-md border border-neutral-300 px-3 py-1.5 text-sm transition-colors dark:border-neutral-700">
         + Carousel
       </button>
       <input ref={carouselInputRef} type="file" accept="image/png,image/jpeg,image/webp" multiple className="hidden" onChange={handleCarouselSelected} />
 
       <div className="relative">
-        <button onClick={() => setShowMore((v) => !v)} className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50">
+        <button onClick={() => setShowMore((v) => !v)} className="hover:border-primary hover:bg-primary/10 hover:text-primary-ink dark:hover:text-primary rounded-md border border-neutral-300 px-3 py-1.5 text-sm transition-colors dark:border-neutral-700">
           + More ▾
         </button>
         {showMore && (
           <>
             <div className="fixed inset-0 z-10" onClick={() => setShowMore(false)} />
-            <div className="absolute top-full left-0 z-20 mt-1 w-48 rounded-md border border-neutral-200 bg-white py-1 shadow-lg">
+            <div className="absolute top-full left-0 z-20 mt-1 w-48 rounded-md border border-neutral-200 bg-white py-1 shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-black/50">
               {MORE_ELEMENT_TYPES.map((type) => (
                 <button
                   key={type}
                   onClick={() => handleAddDefault(type)}
-                  className="block w-full px-3 py-1.5 text-left text-sm hover:bg-neutral-50"
+                  className="hover:bg-primary/10 hover:text-primary-ink dark:hover:text-primary block w-full px-3 py-1.5 text-left text-sm transition-colors"
                 >
                   {ELEMENT_DEFAULTS[type]?.label ?? type}
                 </button>
@@ -96,19 +96,19 @@ export function Toolbar() {
         )}
       </div>
 
-      <div className="mx-2 h-5 w-px bg-neutral-200" />
+      <div className="mx-2 h-5 w-px bg-neutral-200 dark:bg-neutral-800" />
 
       <button
         onClick={() => undo()}
         disabled={!canUndo()}
-        className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50 disabled:opacity-40"
+        className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50 disabled:opacity-40 dark:border-neutral-700 dark:hover:bg-neutral-900"
       >
         Undo
       </button>
       <button
         onClick={() => redo()}
         disabled={!canRedo()}
-        className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50 disabled:opacity-40"
+        className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50 disabled:opacity-40 dark:border-neutral-700 dark:hover:bg-neutral-900"
       >
         Redo
       </button>

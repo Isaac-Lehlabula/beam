@@ -80,35 +80,56 @@ export function ConnectObsPanel({ projectId, resolutionWidth, resolutionHeight }
 
   if (!connected) {
     return (
-      <div className="rounded-md border border-neutral-200 p-3">
-        <h2 className="mb-2 text-sm font-medium">Connect OBS</h2>
-        <p className="mb-2 text-xs text-neutral-500">
+      <div className="rounded-md border border-neutral-200 p-3 dark:border-neutral-800">
+        <h2 className="mb-2 text-sm font-medium">🎥 Connect OBS</h2>
+        <p className="mb-2 text-xs text-neutral-500 dark:text-neutral-400">
           Requires OBS Studio 28+ running on this computer, with Tools &rarr; WebSocket Server Settings enabled.
         </p>
         <div className="flex flex-wrap gap-2">
-          <input value={host} onChange={(e) => setHost(e.target.value)} placeholder="Host" className="w-28 rounded border border-neutral-300 px-2 py-1 text-sm" />
-          <input type="number" value={port} onChange={(e) => setPort(Number(e.target.value))} placeholder="Port" className="w-20 rounded border border-neutral-300 px-2 py-1 text-sm" />
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password (if set)" className="flex-1 rounded border border-neutral-300 px-2 py-1 text-sm" />
-          <button onClick={handleConnect} disabled={connecting} className="rounded-md bg-black px-3 py-1.5 text-sm text-white hover:bg-neutral-800 disabled:opacity-50">
+          <input
+            value={host}
+            onChange={(e) => setHost(e.target.value)}
+            placeholder="Host"
+            className="w-28 rounded border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+          />
+          <input
+            type="number"
+            value={port}
+            onChange={(e) => setPort(Number(e.target.value))}
+            placeholder="Port"
+            className="w-20 rounded border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password (if set)"
+            className="flex-1 rounded border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+          />
+          <button
+            onClick={handleConnect}
+            disabled={connecting}
+            className="bg-primary shadow-primary/20 rounded-md px-3 py-1.5 text-sm text-white shadow-sm transition hover:brightness-110 active:scale-95 disabled:opacity-50"
+          >
             {connecting ? "Connecting..." : "Connect"}
           </button>
         </div>
-        {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
+        {error && <p className="mt-2 text-xs text-red-600 dark:text-red-400">{error}</p>}
       </div>
     );
   }
 
   return (
-    <div className="rounded-md border border-neutral-200 p-3">
+    <div className="rounded-md border border-neutral-200 p-3 dark:border-neutral-800">
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-sm font-medium">OBS connected</h2>
         <div className="flex items-center gap-3 text-xs">
           {status && (
-            <span className="text-neutral-500">
+            <span className="text-neutral-500 dark:text-neutral-400">
               {status.streaming ? "🔴 Streaming" : "Not streaming"} · {status.recording ? "⏺ Recording" : "Not recording"}
             </span>
           )}
-          <button onClick={handleDisconnect} className="text-neutral-500 underline hover:text-black">
+          <button onClick={handleDisconnect} className="text-neutral-500 underline hover:text-black dark:text-neutral-400 dark:hover:text-white">
             Disconnect
           </button>
         </div>
@@ -116,23 +137,26 @@ export function ConnectObsPanel({ projectId, resolutionWidth, resolutionHeight }
 
       <ul className="space-y-1">
         {scenes.map((scene) => (
-          <li key={scene.name} className="flex items-center justify-between rounded border border-neutral-200 px-2 py-1.5 text-sm">
+          <li
+            key={scene.name}
+            className="flex items-center justify-between rounded border border-neutral-200 px-2 py-1.5 text-sm dark:border-neutral-800"
+          >
             <span className={scene.isCurrent ? "font-medium" : ""}>
               {scene.isCurrent && "▶ "}
               {scene.name}
             </span>
             <div className="flex gap-2 text-xs">
-              <button onClick={() => obs.switchScene(scene.name)} className="text-blue-600 hover:underline">
+              <button onClick={() => obs.switchScene(scene.name)} className="text-primary-ink dark:text-primary hover:underline">
                 Switch
               </button>
-              <button onClick={() => handleCreateBrowserSource(scene.name)} className="text-blue-600 hover:underline">
+              <button onClick={() => handleCreateBrowserSource(scene.name)} className="text-primary-ink dark:text-primary hover:underline">
                 Add Beam overlay
               </button>
             </div>
           </li>
         ))}
       </ul>
-      {sourceMessage && <p className="mt-2 text-xs text-green-700">{sourceMessage}</p>}
+      {sourceMessage && <p className="mt-2 text-xs text-green-700 dark:text-green-400">{sourceMessage}</p>}
     </div>
   );
 }

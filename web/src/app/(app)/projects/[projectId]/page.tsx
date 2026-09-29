@@ -69,19 +69,19 @@ export default function ProjectPage() {
   }
 
   if (!project) {
-    return <div className="p-10 text-sm text-neutral-400">Loading...</div>;
+    return <div className="p-10 text-sm text-neutral-400 dark:text-neutral-500">Loading...</div>;
   }
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-10">
-      <Link href="/dashboard" className="text-sm text-neutral-500 hover:underline">
+      <Link href="/dashboard" className="text-sm text-neutral-500 hover:underline dark:text-neutral-400">
         &larr; All projects
       </Link>
 
       <div className="mt-2 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">{project.name}</h1>
-          <p className="text-sm text-neutral-500">
+          <h1 className="font-display text-2xl font-bold">{project.name}</h1>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
             {project.resolutionWidth}x{project.resolutionHeight}
           </p>
         </div>
@@ -89,14 +89,14 @@ export default function ProjectPage() {
           <SaveAsOrgTemplate projectId={projectId} />
           <Link
             href={`/projects/${projectId}/live`}
-            className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium hover:bg-neutral-50"
+            className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-900"
           >
             Live Control
           </Link>
         </div>
       </div>
 
-      <h2 className="mt-8 mb-3 text-sm font-medium text-neutral-500">Scenes</h2>
+      <h2 className="mt-8 mb-3 text-sm font-medium text-neutral-500 dark:text-neutral-400">Scenes</h2>
       <ul className="space-y-2">
         {scenes.map((scene, index) => (
           <li
@@ -105,22 +105,22 @@ export default function ProjectPage() {
             onDragStart={() => (dragIndex.current = index)}
             onDragOver={(e) => e.preventDefault()}
             onDrop={() => handleDrop(index)}
-            className="flex items-center justify-between rounded-md border border-neutral-200 px-4 py-3 cursor-move"
+            className="flex items-center justify-between rounded-md border border-neutral-200 px-4 py-3 cursor-move dark:border-neutral-800"
           >
             <div className="flex items-center gap-3">
-              <span className="text-neutral-400">⠿</span>
+              <span className="text-neutral-400 dark:text-neutral-600">⠿</span>
               <Link href={`/projects/${projectId}/scenes/${scene.id}`} className="font-medium hover:underline">
                 {scene.name}
               </Link>
             </div>
-            <div className="flex gap-3 text-xs text-neutral-500">
-              <button onClick={() => handleRename(scene.id, scene.name)} className="hover:text-black">
+            <div className="flex gap-3 text-xs text-neutral-500 dark:text-neutral-400">
+              <button onClick={() => handleRename(scene.id, scene.name)} className="hover:text-black dark:hover:text-white">
                 Rename
               </button>
-              <button onClick={() => handleDuplicate(scene.id)} className="hover:text-black">
+              <button onClick={() => handleDuplicate(scene.id)} className="hover:text-black dark:hover:text-white">
                 Duplicate
               </button>
-              <button onClick={() => handleDelete(scene.id)} className="hover:text-red-600">
+              <button onClick={() => handleDelete(scene.id)} className="hover:text-red-600 dark:hover:text-red-400">
                 Delete
               </button>
             </div>
@@ -134,11 +134,11 @@ export default function ProjectPage() {
           onChange={(e) => setNewSceneName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleCreateScene()}
           placeholder="New scene name"
-          className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
         />
         <button
           onClick={handleCreateScene}
-          className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800"
+          className="bg-primary shadow-primary/20 rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-110 active:scale-95"
         >
           Add scene
         </button>

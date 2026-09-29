@@ -61,9 +61,11 @@ export default function StreamingOAuthCallbackPage() {
 
   return (
     <main className="mx-auto max-w-md px-6 py-16 text-center">
-      <p className={`mb-4 text-sm ${status === "error" ? "text-red-600" : "text-neutral-600"}`}>{message}</p>
+      <p className={`mb-4 text-sm ${status === "error" ? "text-red-600 dark:text-red-400" : "text-neutral-600 dark:text-neutral-300"}`}>
+        {message}
+      </p>
       {status !== "working" && (
-        <Link href="/settings/streaming" className="text-sm text-blue-600 hover:underline">
+        <Link href="/settings/streaming" className="text-primary-ink dark:text-primary text-sm hover:underline">
           Back to streaming destinations
         </Link>
       )}
