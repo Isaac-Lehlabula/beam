@@ -20,7 +20,12 @@ COPY src/Beam.Modules/Beam.Modules.Audit/Beam.Modules.Audit.csproj src/Beam.Modu
 RUN dotnet restore src/Beam.Api/Beam.Api.csproj
 
 COPY src/ src/
-RUN dotnet publish src/Beam.Api/Beam.Api.csproj -c Release -o /app --no-restore
+# SixLabors.ImageSharp (image re-encoding on upload) fails Release builds without a license key.
+# Supplied at build time (see docker-compose.yml / SIXLABORS_LICENSE_KEY); only the build stage
+# sees it, not the runtime image.
+ARG SIXLABORS_LICENSE_KEY=""
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish src/Beam.Api/Beam.Api.csproj -c ${BUILD_CONFIGURATION} -o /app --no-restore -p:SixLaborsLicenseKey="${SIXLABORS_LICENSE_KEY}"
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app

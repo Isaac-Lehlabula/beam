@@ -19,3 +19,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Azure deployment secrets (template: infra/azure.env.example)
+infra/azure.env

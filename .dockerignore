@@ -1,0 +1,14 @@
+# Build context for the API image is the repo root. Host build output must never be copied in:
+# obj/ holds Windows-specific NuGet asset paths that break `dotnet publish` inside the container.
+**/bin/
+**/obj/
+**/.vs/
+.git/
+.claude/
+docs/
+tests/
+web/
+docker-compose.yml
+# Deploy scripts and infra/azure.env (deployment secrets) -- `az acr build` uploads this context.
+infra/
+**/*.log

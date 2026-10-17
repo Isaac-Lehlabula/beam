@@ -54,9 +54,16 @@ public static class InfrastructureModule
             throw new InvalidOperationException("Missing Storage:ServiceUrl/AccessKey/SecretKey configuration.");
         }
 
-        services.AddSingleton<IAmazonS3>(_ => new AmazonS3Client(
-            new BasicAWSCredentials(accessKey, secretKey),
-            new AmazonS3Config { ServiceURL = serviceUrl, ForcePathStyle = true }));
+        // Optional SigV4 signing region. MinIO accepts any, but hosted S3-compatible stores such as
+        // Supabase Storage reject requests not signed for the project's own region.
+        var region = configuration["Storage:Region"];
+        var s3Config = new AmazonS3Config { ServiceURL = serviceUrl, ForcePathStyle = true };
+        if (!string.IsNullOrWhiteSpace(region))
+        {
+            s3Config.AuthenticationRegion = region;
+        }
+
+        services.AddSingleton<IAmazonS3>(_ => new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey), s3Config));
         services.AddScoped<IFileStorageService, S3FileStorageService>();
 
         return services;

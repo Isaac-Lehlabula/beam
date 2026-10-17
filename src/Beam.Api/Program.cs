@@ -19,6 +19,8 @@ using Beam.Modules.Templates;
 using Beam.Shared.Abstractions;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -56,7 +58,12 @@ builder.Services
         options.Cookie.Name = "beam.auth";
         options.Cookie.HttpOnly = true;
         options.Cookie.SameSite = SameSiteMode.Lax;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        // Outside Development the cookie is never sent over plain HTTP. SameAsRequest would
+        // silently downgrade it behind a TLS-terminating proxy (the API only sees http://), so
+        // pair this with the forwarded-headers handling below.
+        options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+            ? CookieSecurePolicy.SameAsRequest
+            : CookieSecurePolicy.Always;
         options.ExpireTimeSpan = TimeSpan.FromDays(14);
         options.SlidingExpiration = true;
 
@@ -78,8 +85,30 @@ builder.Services.AddCors(options => options.AddPolicy(PublicOverlayCorsPolicy, p
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IRealtimeNotifier, SignalRRealtimeNotifier>();
-// Backs StreamingDestinationService's token-at-rest encryption (Beam.Modules.StreamingDestinations).
-builder.Services.AddDataProtection();
+// Backs StreamingDestinationService's token-at-rest encryption (Beam.Modules.StreamingDestinations)
+// AND the auth cookie. Keys must survive restarts/redeploys or every user is logged out and every
+// stored Twitch/YouTube token becomes undecryptable. They're stored in Postgres (the
+// DataProtectionKeys table) so the API itself is stateless and needs no persistent volume, which
+// keeps it deployable on any container host. Losing or rotating this table has the same effect as
+// losing the keys: back it up with the rest of the database.
+builder.Services.AddDataProtection()
+    .SetApplicationName("Beam")
+    .PersistKeysToDbContext<BeamDbContext>();
+
+// Behind a reverse proxy (Caddy/nginx, plus Next.js's own /api proxy) the socket peer is the
+// proxy, so without this the rate limiter would bucket every user under one IP and cookies
+// would be issued as if the request were plain HTTP. Trust is explicit: only proxies inside
+// ForwardedHeaders:KnownNetworks (CIDR list, e.g. the Docker network) are believed. With no
+// networks configured only loopback is trusted, so a client can't spoof its own IP.
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.ForwardLimit = null; // walk the whole chain; trust is bounded by KnownNetworks instead
+    foreach (var cidr in builder.Configuration.GetSection("ForwardedHeaders:KnownNetworks").Get<string[]>() ?? [])
+    {
+        options.KnownIPNetworks.Add(System.Net.IPNetwork.Parse(cidr));
+    }
+});
 // Singleton by design: the live overrides it holds are ephemeral, per-process state
 // (ARCHITECTURE.md "Design state vs. live state"), not something EF Core/the database owns.
 builder.Services.AddSingleton<ILiveStateStore, InMemoryLiveStateStore>();
@@ -157,10 +186,17 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// Migrations + bucket creation run automatically in Development; in any other environment they
+// run only when explicitly opted in (Startup:ApplyMigrations=true), which suits a single-instance
+// deploy. With multiple instances, run migrations as a separate deploy step instead.
+if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("Startup:ApplyMigrations"))
 {
     await app.Services.EnsureBeamInfrastructureReadyAsync(app.Configuration);
 }
+
+// First in the pipeline so everything after it (HTTPS redirect, rate limiting, auth) sees the
+// real client IP and scheme.
+app.UseForwardedHeaders();
 
 app.UseExceptionHandler();
 

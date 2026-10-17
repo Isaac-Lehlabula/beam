@@ -21,6 +21,7 @@ using Beam.Modules.Templates;
 using Beam.Modules.Templates.Abstractions;
 using Beam.Modules.Templates.Seed;
 using Beam.Shared.Abstractions;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +46,8 @@ public class BeamDbContext(DbContextOptions<BeamDbContext> options, ICurrentUser
         ITemplatesDbContext,
         ILiveControlDbContext,
         IStreamingDestinationsDbContext,
-        IAuditDbContext
+        IAuditDbContext,
+        IDataProtectionKeyContext
 {
     public DbSet<Organization> Organizations => Set<Organization>();
 
@@ -70,6 +72,10 @@ public class BeamDbContext(DbContextOptions<BeamDbContext> options, ICurrentUser
     public DbSet<StreamingDestinationConnection> StreamingDestinationConnections => Set<StreamingDestinationConnection>();
 
     public DbSet<AuditLogEntry> AuditLogEntries => Set<AuditLogEntry>();
+
+    // ASP.NET Core Data Protection key ring (auth cookie + stored OAuth token encryption). Kept
+    // in the database rather than on disk so the API needs no persistent volume -- see Program.cs.
+    public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

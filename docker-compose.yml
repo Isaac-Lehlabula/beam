@@ -38,6 +38,9 @@ services:
     build:
       context: .
       dockerfile: src/Beam.Api/Dockerfile
+      args:
+        SIXLABORS_LICENSE_KEY: ${SIXLABORS_LICENSE_KEY:-}
+        BUILD_CONFIGURATION: ${BEAM_BUILD_CONFIGURATION:-Release}
     restart: unless-stopped
     depends_on:
       postgres:
@@ -52,6 +55,10 @@ services:
       Storage__AccessKey: "beam_dev_access_key"
       Storage__SecretKey: "beam_dev_secret_key"
       Storage__BucketName: "beam-assets"
+      # Single-instance deploy: let the API apply migrations / create the bucket on startup.
+      Startup__ApplyMigrations: "true"
+      # Trust X-Forwarded-* only from proxies on Docker's bridge network (web container, Caddy, ...).
+      ForwardedHeaders__KnownNetworks__0: "172.16.0.0/12"
     ports:
       - "5080:8080"
 
@@ -59,11 +66,13 @@ services:
     build:
       context: ./web
       dockerfile: Dockerfile
+      args:
+        # Baked in at build time (Next.js freezes rewrites() during `next build`).
+        BEAM_API_INTERNAL_URL: "http://api:8080"
     restart: unless-stopped
     depends_on:
       - api
     environment:
-      BEAM_API_INTERNAL_URL: "http://api:8080"
       # Consumed by the browser directly (overlay/control pages), so this must be the API's
       # publicly reachable address, not the Docker-internal service name above.
       BEAM_API_PUBLIC_URL: "http://localhost:5080"
